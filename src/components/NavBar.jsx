@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import FourColumns from './FourColumns';
+import './NavBar.css';
 
 const Navbar = () => {
     const [activeMenu, setActiveMenu] = useState(null);
@@ -44,7 +45,8 @@ const Navbar = () => {
                     { key: 'series', label: 'Сериалы' }
                 ].map((menu) => (
                     <div key={menu.key} className="relative group" ref={menuRefs.current[menu.key]}>
-                        <button onClick={() => toggleMenu(menu.key)}>{menu.label}</button>
+                        <button onClick={() => toggleMenu(menu.key)}
+                             className={`${activeMenu === menu.key ? 'active-menu-item' : ''}`}>{menu.label}</button>
                     </div>
                 ))}
             </nav>
