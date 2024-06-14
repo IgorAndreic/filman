@@ -35,9 +35,10 @@ const Navbar = () => {
     }, [activeMenu, menuRefs]);
 
     return (
-        <section className="max-w-4xl mx-auto p-4">
+        <section className="bg-zinc-600 max-w-full mx-auto p-4 z-20">
             {activeMenu && <FourColumns menuType={activeMenu} />}
             <nav className="flex flex-row space-x-8 text-xl">
+            <img src="assets/imagelogo.png" alt="Logo" className="h-10 w-40" />
                 {[
                     { key: 'all', label: 'Все' },
                     { key: 'movies', label: 'Фильмы' },

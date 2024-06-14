@@ -1,53 +1,83 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+
 
 const MovieBanner = () => {
-  // Заглушка для данных
-  const movieData = {
-    title: "Кратер",
-    year: 2023,
-    genres: ["фантастика", "драма", "приключения"],
-    country: "США",
-    description: "После смерти отца мальчик, выросший на лунной шахтерской колонии, вместе со своими четырьмя лучшими друзьями отправляется в путешествие, чтобы исследовать легендарный кратер перед тем, как его навсегда переселят на другую планету.",
-    rating: 7.2,
-    imageUrl: "assets/image123.png",  // Используйте правильный путь к изображению
-    posterUrl: "assets/image131.png", // Используйте правильный путь к постеру
-  };
+  const [movieData, setMovieData] = useState(null);
+  console.log('MovieData:', movieData);
+  const url = 'https://api.kinopoisk.dev/v1.4/movie/random?rating.kp=8-10';
+  
+
+  useEffect(() => {
+    const fetchMovie = async () => {
+      try {
+        const response = await fetch(url, {
+          method: 'GET',
+          headers: {
+            'accept': 'application/json',
+            'X-API-KEY': '6M6GK5M-7GMM2R7-JD7J0W1-4Z5VYBK',
+          }
+        });
+        console.log('Response:', response);
+    
+        if (!response.ok) {
+          console.error('Failed to fetch movie:', response.statusText);
+          // Логируем тело ответа для диагностики
+          const text = await response.text();
+          console.log('Response text:', text);
+          return;
+        }
+    
+        const data = await response.json();
+        setMovieData({
+          title: data.name,
+          year: data.year,
+          genres: data.genres.map(genre => genre.name),
+          country: data.countries.map(country => country.name).join(', '),
+          description: data.description,
+          rating: data.rating.kp,
+          imageUrl: data.backdrop ? data.backdrop.url : '',
+          posterUrl: data.poster ? data.poster.url : '',
+        });
+      } catch (error) {
+        console.error('Failed to fetch movie:', error);
+      }
+    };
+
+    fetchMovie();
+  }, []);
+
+  if (!movieData) {
+    return <div>Loading...</div>;
+  }
 
   return (
-    <>
-    <section id="movibanner" className="flex flex-col-reverse justify-center sm:flex-row p-6 items-center gap-8 mb-12 scroll-mt-40 widescreen:section-min-height tallscreen:section-min-height flex-wrap">
-        <div
-        className="absolute top-0 rihgt-0 w-full h-full left-0 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: `url(${movieData.imageUrl})` }}>
-            <div className="absolute w-full h-full bg-black bg-opacity-50">
-            </div>
-        </div>
-        <article className="sm:w-1/2">
-            
-                <div className="flex flex-col space-y-3">
-                <div className="absolute w-[371px] h-[91px] left-1/4 bottom-[220px] text-white font-bold text-7xl leading-[117px] flex items-end basic-1/4" style={{ fontFamily: 'Montserrat' }}>
-                {movieData.title}
-                </div>
-                <div className="absolute text-base text-slate-50 w-[360px] h-[17px] left-1/4 bottom-[200px] text-m basic-1/4">
-                {movieData.year} • {movieData.genres.join(", ")} • {movieData.country}
-                </div>
-                <div className="absolute w-[953px] h-[72px] left-1/4 bottom-[120px] text-white font-medium text-xl leading-[24px] flex items-center basic-1/4" style={{ fontFamily: 'Montserrat' }}>
-                {movieData.description}
-                </div>
-                <button className="absolute left-1/4 bottom-[30px] bg-yellow-500 text-black font-bold text-2xl py-2 px-8 rounded"
-                style={{ filter: 'drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25))' }}>
-                Смотреть
-                </button>
-                </div>
-            </article>
-                <div className="absolute w-[223px] h-[335px] left-[8%] top-[40%] bg-cover" style={{ backgroundImage: `url(${movieData.posterUrl})` }}></div>
-
-                <div className="absolute w-[40px] h-[40px] top-[60px] right-[20px] text-yellow-500 font-bold text-center text-xl text-bold py-2 px-2 shadow-lg rounded-lg">
-                    {movieData.rating}
-                </div>
+    <div className="static w-full h-screen bg-cover bg-center bg-no-repeat z-0" style={{ backgroundImage: `url(${movieData.imageUrl})` }}>
+      {/* Overlay для затемнения фона и улучшения читаемости текста */}
+      <div className="absolute inset-0 bg-black bg-opacity-50 z-0"></div>
       
-    </section>
-    </>
+      {/* Контейнер для всего контента */}
+      <div className="relative p-8 flex items-end h-4/5">
+        {/* Постер фильма, расположенный слева внизу */}
+        <div className="ml-20 w-80 h-120 relative">
+            <img src={movieData.posterUrl} alt="Movie Poster" />
+        </div>
+
+        {/* Основной контент с заголовком и описанием */}
+        <div className="ml-8 text-white max-w-1/3">
+          <h1 className="text-4xl font-bold">{movieData.title}</h1>
+          <p className=" mt-2">{movieData.year} • {movieData.genres.join(", ")} • {movieData.country}</p>
+          <p className="mt-2 mb-8 w-2/3">{movieData.description}</p>
+          <button className="bg-yellow-500 text-black px-8 py-2 mt-2 mb-2 rounded-full font-bold">Смотреть</button>
+        </div>
+        </div>
+
+        {/* Блок с рейтингом фильма */}
+        <div className="absolute top-20 right-6 bg-gray-800 bg-opacity-75 rounded-full p-2 text-yellow-500 font-bold">
+          {movieData.rating}
+      </div>
+  </div>
+
+
   );
 };
 
