@@ -2,7 +2,7 @@ import React from 'react';
 
 const FourColumns = () => {
   return (
-    <div className="absolute inset-x-0 mt-8 bg-zinc-600 text-white text-center shadow-md p-4 grid grid-cols-4 gap-4">
+    <div className="fixed inset-x-12 top-14 bg-zinc-600 text-white text-center shadow-md p-4 grid grid-cols-4 gap-4 z-30">
       <hr className="col-span-4" />
       <div className="flex-1 max-w-xs mx-auto text-left">
         <div className="font-bold">Жанры</div>

@@ -1,58 +1,41 @@
-import React, { useState, useEffect, useRef } from 'react';
-import FourColumns from './FourColumns';
+import React from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import './NavBar.css';
 
-const Navbar = () => {
-    const [activeMenu, setActiveMenu] = useState(null);
-    const menuRefs = useRef({
-        all: useRef(null),
-        movies: useRef(null),
-        cartoons: useRef(null),
-        series: useRef(null)
-    });
+const Navbar = ({ selectedMenu, setSelectedMenu }) => {
+    const navigate = useNavigate();
+    const location = useLocation();
 
-    const toggleMenu = (menu) => {
-        if (activeMenu === menu) {
-            setActiveMenu(null);
+    const handleMenuClick = (menuKey) => {
+        if (location.pathname === "/catalog") {
+            setSelectedMenu(menuKey); 
         } else {
-            setActiveMenu(menu);
+            navigate(`/catalog`, { state: { menu: menuKey } }); 
         }
     };
 
-    // Добавляем слушатель клика по всему документу
-    useEffect(() => {
-        const handleClickOutside = (event) => {
-            const currentMenuRef = menuRefs.current[activeMenu];
-            if (currentMenuRef && currentMenuRef.current && !currentMenuRef.current.contains(event.target)) {
-                setActiveMenu(null); // Закрываем меню, если клик вне области меню
-            }
-        };
-
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside); // Очищаем слушатель
-        };
-    }, [activeMenu, menuRefs]);
-
     return (
-        <section className="bg-zinc-600 max-w-full mx-auto p-4 z-20">
-            {activeMenu && <FourColumns menuType={activeMenu} />}
-            <nav className="flex flex-row space-x-8 text-xl">
-            <img src="assets/imagelogo.png" alt="Logo" className="h-10 w-40" />
-                {[
-                    { key: 'all', label: 'Все' },
-                    { key: 'movies', label: 'Фильмы' },
-                    { key: 'cartoons', label: 'Мультфильмы' },
-                    { key: 'series', label: 'Сериалы' }
-                ].map((menu) => (
-                    <div key={menu.key} className="relative group" ref={menuRefs.current[menu.key]}>
-                        <button onClick={() => toggleMenu(menu.key)}
-                             className={`${activeMenu === menu.key ? 'active-menu-item' : ''}`}>{menu.label}</button>
-                    </div>
-                ))}
-            </nav>
+        <section className="bg-zinc-600 max-w-full max-h-14 text-white mx-auto p-4 z-20 flex items-center justify-between">
+          <nav className="flex space-x-8 text-xl items-center">
+            <a href="/" >
+              <img src="assets/logo.png" alt="Logo" className="h-10 w-40" />
+            </a>
+            {[
+              { key: 'all', label: 'Все' },
+              { key: 'movies', label: 'Фильмы' },
+              { key: 'cartoons', label: 'Мультфильмы' },
+              { key: 'series', label: 'Сериалы' }
+            ].map((menu) => (
+                <button key={menu.key} onClick={() => handleMenuClick(menu.key)} 
+                className={`relative ${selectedMenu === menu.key ? 'text-blue-500' : ''}`}
+                >
+                    {menu.label}
+                </button>
+            ))}
+            <img src="assets/Ellipse.png" alt="Ellipse" className="h-10 w-10 pb-auto pt-auto" />
+          </nav>
         </section>
-    );
+      );
 };
 
 export default Navbar;

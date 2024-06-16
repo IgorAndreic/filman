@@ -1,59 +1,63 @@
 import React, { useEffect, useState } from 'react';
 
-
 const MovieBanner = () => {
   const [movieData, setMovieData] = useState(null);
-  console.log('MovieData:', movieData);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
   const url = 'https://api.kinopoisk.dev/v1.4/movie/random?rating.kp=8-10';
   
-
   useEffect(() => {
     const fetchMovie = async () => {
+      setIsLoading(true); // Начало загрузки
+      setError(null); // Очистка предыдущих ошибок
+
       try {
         const response = await fetch(url, {
           method: 'GET',
           headers: {
             'accept': 'application/json',
-            'X-API-KEY': '6M6GK5M-7GMM2R7-JD7J0W1-4Z5VYBK',
+            'X-API-KEY': '3STFSVK-CN34YNE-PQTG091-F3FEVW3',
           }
         });
-        console.log('Response:', response);
-    
+
         if (!response.ok) {
-          console.error('Failed to fetch movie:', response.statusText);
-          // Логируем тело ответа для диагностики
-          const text = await response.text();
-          console.log('Response text:', text);
-          return;
+          throw new Error(`HTTP error! status: ${response.status}`);
         }
-    
+
         const data = await response.json();
         setMovieData({
-          title: data.name,
-          year: data.year,
-          genres: data.genres.map(genre => genre.name),
-          country: data.countries.map(country => country.name).join(', '),
-          description: data.description,
-          rating: data.rating.kp,
-          imageUrl: data.backdrop ? data.backdrop.url : '',
-          posterUrl: data.poster ? data.poster.url : '',
+          title: data.name || "Загрузка...",
+          year: data.year || "Дата не указана",
+          genres: data.genres.map(genre => genre.name) || ["Жанр не указан"],
+          country: data.countries.map(country => country.name).join(', ') || 'Страна не указана',
+          description: data.description || "Описание недоступно.",
+          rating: data.rating.kp || 0,
+          imageUrl: data.backdrop?.url || "assets/assets/image123.png",
+          posterUrl: data.poster?.url || 'assets/image131.png',
         });
+        setIsLoading(false); // Загрузка завершена
       } catch (error) {
-        console.error('Failed to fetch movie:', error);
+        setError('Не удалось загрузить данные о фильме.'); // Установка ошибки
+        setIsLoading(false);
+        console.error('Error fetching movie:', error);
       }
     };
 
     fetchMovie();
   }, []);
 
-  if (!movieData) {
+  if (isLoading) {
     return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
   }
 
   return (
     <div className="static w-full h-screen bg-cover bg-center bg-no-repeat z-0" style={{ backgroundImage: `url(${movieData.imageUrl})` }}>
       {/* Overlay для затемнения фона и улучшения читаемости текста */}
-      <div className="absolute inset-0 bg-black bg-opacity-50 z-0"></div>
+      <div className="absolute w-full inset-0 bg-black bg-opacity-50 z-0"></div>
       
       {/* Контейнер для всего контента */}
       <div className="relative p-8 flex items-end h-4/5">
