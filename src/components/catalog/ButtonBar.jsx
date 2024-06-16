@@ -12,7 +12,7 @@ const ButtonBar = ({active, setActive}) => {
     ];
 
     return (
-        <div className="p-4 text-white flex justify-center space-x-4 z-20">
+        <div className="p-4 text-white flex justify-center space-x-4 z-10">
             {buttons.map((button) => (
                 <button
                     key={button.id}

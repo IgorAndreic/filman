@@ -11,7 +11,7 @@ const movies = [
 
 const PopularMovies = ({player, setPlayer}) => {
 
-  const handleClick = (movie) => {
+  const handleClick = (movie) => () => {
     setPlayer(movie);
   }
 

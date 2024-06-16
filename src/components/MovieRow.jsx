@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 // Массив с данными фильмов для примера
 const movies = [
@@ -7,10 +8,18 @@ const movies = [
   { id: 3, title: "Film 3", rating: 8.3 }
 ];
 
-const MovieRow = () => {
+const menuTitles = {
+  all: 'Все',
+  movies: 'Фильмы',
+  cartoons: 'Мультфильмы',
+  series: 'Сериалы'
+};
+
+const MovieRow = ( {menuTitle} ) => {
+  const navigate = useNavigate();
   return (
     <>
-    <h2 className="text-xl text-center font-semibold text-white">Новинки кино</h2>
+    <h2 className="text-xl text-center font-semibold text-white">{menuTitles[menuTitle]}</h2>
     <div className="flex flex-wrap justify-center items-center w-5/6 ml-auto mr-auto px-4 py-2 mb-12 z-10">
       <div className="flex space-x-4 w-full">
         {movies.map((movie) => (
@@ -22,9 +31,9 @@ const MovieRow = () => {
       
         <div className="flex items-center">
             {/* Иконка стрелки (используем изображение в качестве иконки) */}
-            <a href="/catalog" className="text-blue-500 hover:text-blue-700">
-                <img src="assets/show_all.png" alt="Show All" />  {/* Исправлено: добавлен alt и правильный формат тега */}
-            </a>
+            <button onClick={() => navigate('/catalog', { state: { menu: menuTitle } })} className="text-blue-500 hover:text-blue-700">
+                <img src="assets/show_all.png" alt="Show All" />  
+            </button>
         </div>
       </div>
     </div>

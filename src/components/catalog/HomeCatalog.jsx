@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import MainContainer from '../MainContainer';
 import Navbar from '../NavBar';
@@ -9,6 +9,7 @@ import Search from '../Search';
 import ButtonBar from './ButtonBar';
 import SortComponent from './SortComponent';
 import MovieBanners from './MovieBanners';
+import Filter from './Filter';
 
 function HomeCatalog() {
   const location = useLocation();
@@ -17,6 +18,15 @@ function HomeCatalog() {
   const [activeMenu, setActiveMenu] = useState(null);
   const [active, setActive] = useState(null);
   const [sortOption, setSortOption] = useState('alphabetical');
+
+  const handleFilterApply = (filters) => {
+    console.log('Фильтры для запроса:', filters);
+    // Здесь может быть вызов API или обновление состояния с заглушкой
+  };
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
 
   const menuTitles = {
     all: 'Все',
@@ -50,10 +60,14 @@ function HomeCatalog() {
   return (
     <>
     <MainContainer>
-      <Sidebar activeMenu={activeMenu} setActiveMenu={setActiveMenu} />
+      
       <header className="bg-zinc-600 text-white sticky top-0 z-10"> 
         <Navbar selectedMenu={selectedMenu} setSelectedMenu={setSelectedMenu}/>
       </header>
+      <div className="flex flex-row">
+        <div className='z-20'>
+          <Sidebar activeMenu={activeMenu} setActiveMenu={setActiveMenu} />
+        </div>
       <main className="flex flex-col flex-grow">
       <div className="flex top-24 mt-12 sm:ml-10 md:ml-20 lg:ml-40 text-left text-white text-5xl">
         <h1>{menuTitles[selectedMenu]}</h1>
@@ -62,8 +76,14 @@ function HomeCatalog() {
         <Search />
         <SortComponent sortOption={sortOption} setSortOption={setSortOption} />
         <MovieBanners movies={movies} />
+        
         {activeMenu && <FourColumns activeMenu={activeMenu} />} 
       </main>
+      <div className="w-24">
+        <Filter onApply={handleFilterApply} />
+      </div>
+
+      </div>
       <footer>
         <Footer />
       </footer>     

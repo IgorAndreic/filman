@@ -15,29 +15,6 @@ function Home() {
   const [activeMenu, setActiveMenu] = useState(null);
   const [ player, setPlayer ] = useState(null);
 
-  const movieData = {
-    image: 'path_to_image.jpg', // Замените на реальный путь к изображению
-    position: 1,
-    rating: '8.1',
-    title: 'Мстители: Война бесконечности',
-    country: 'США',
-    year: '2018',
-    genre: 'фантастика, боевик, приключения',
-    ageCategory: '16+',
-    likes: 133255,
-    dislikes: 17
-  };
-
-  const films = [
-    // Массив с данными фильмов
-    {
-      image: 'path_to_infinity_war_image.jpg',
-      rating: '8.1',
-      title: 'Мстители: Война бесконечности',
-      ageCategory: '16+'
-    },
-    // Добавьте еще два фильма
-  ];
 
   return (
     <MainContainer>      
@@ -50,9 +27,9 @@ function Home() {
         {activeMenu && <FourColumns activeMenu={activeMenu} />} 
         <Search />
         <PopularMovies player={player} setPlayer={setPlayer} />
-        <MovieRow />
-        <MovieRow />
-        <MovieRow />
+        <MovieRow menuTitle = 'movies' />
+        <MovieRow menuTitle = 'cartoons'/>
+        <MovieRow menuTitle = 'series'/>
         <RegistrationBanner
           backgroundImage="assets/reg.png" // Укажите правильный путь к изображению
           userCount={508962}
