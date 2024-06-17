@@ -9,6 +9,7 @@ import MainContainer from './MainContainer';
 import PopularMovies from './PopularMovies';
 import MovieRow from './MovieRow';
 import FourColumns from './FourColumns';
+import AnonsNews from './AnonsNews';
 
 
 function Home() {
@@ -34,8 +35,8 @@ function Home() {
           backgroundImage="assets/reg.png" // Укажите правильный путь к изображению
           userCount={508962}
         />
-        <MovieRow />
-        <MovieRow />
+        <AnonsNews menuTitle = 'news' />
+        <AnonsNews menuTitle = 'forum' />
       </main>
       <footer>
         <Footer />
